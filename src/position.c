@@ -5,11 +5,10 @@
 #include <stdlib.h>
 #include <wchar.h>
 
-
-void print_position(Position position) {
+void print_position(Position *position) {
   for (Square sq = A8; sq <= H1; sq++) {
     if (sq % 8 == 0) printf("%d ", 8 - (sq / 8));
-    printf("%s ", pretty_char_of_piece_utf8(position.board[sq]));
+    printf("%s ", pretty_char_of_piece_utf8(position->board[sq]));
     if (sq % 8 == 7) printf("\n");
   }
   printf("  A B C D E F G H\n");

@@ -21,7 +21,6 @@ typedef enum Piece {
 
 Piece piece_of_char(char p);
 char char_of_piece(Piece p);
-wchar_t pretty_char_of_piece(Piece p);
 const char* pretty_char_of_piece_utf8(Piece p) ;
 /**
  *  Warning: This function assumes that Piece != Empty

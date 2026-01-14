@@ -52,7 +52,7 @@ typedef struct Position {
   bool turn;
 } Position;
 
-void print_position(Position position);
+void print_position(Position *position);
 
 Position position_of_fen(char *fen);
 char *fen_of_position(Position *position);
