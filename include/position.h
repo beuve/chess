@@ -46,8 +46,8 @@ typedef struct Position {
   uint8_t num_halfmoves;
 
   /** Side to move:
-   * - true: Black
-   * - false: White
+   * - 0: White
+   * - 1: Black
    */
   bool turn;
 } Position;
