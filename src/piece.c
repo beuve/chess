@@ -23,12 +23,12 @@ Piece piece_of_char(char p) {
 }
 
 static const char* pieces_utf8[13] = {
-"·", "♔", "♚", "♕", "♛", "♖", "♜",
-"♗", "♝", "♘", "♞", "♙", "♟"
+"·", "♚", "♔", "♛", "♕", "♜", "♖",
+"♝", "♗", "♞", "♘", "♟", "♙"
 };
 
 const char* pretty_char_of_piece_utf8(Piece p) {
-return pieces_utf8[p];
+  return pieces_utf8[p];
 };
 
 static char pieces_char[13] = {' ', 'K', 'k', 'Q', 'q', 'R', 'r',
