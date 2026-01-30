@@ -5,28 +5,34 @@
 #include <stdlib.h>
 #include <wchar.h>
 
-void print_position(Position *position) {
-  for (Square sq = A8; sq <= H1; sq++) {
-    if (sq % 8 == 0) printf("%d ", 8 - (sq / 8));
-    printf("%s ", pretty_char_of_piece_utf8(position->board[sq]));
-    if (sq % 8 == 7) printf("\n");
+void print_position(Position *position) { 
+  for (int rk = R8; rk >= R1; rk--) {
+    printf("%d ", 8 - rk);
+    for (File fl = FA; fl <= FH; fl++) {
+      Square sq = square_of_rk_fl(7 - rk, fl);
+      printf("%s ", pretty_char_of_piece_utf8(position->board[sq]));
+    }
+    printf("\n");
   }
   printf("  A B C D E F G H\n");
 }
 
 Position position_of_fen(char *fen) {
   Position position = {0};
-  Square sq = A8;
+  File fl = FA;
+  Rank rk = R8;
   while (*fen != ' ') {
+    Square sq = square_of_rk_fl(rk, fl);
     if (*fen == '/') {
+      rk--;
+      fl = 0;
     } else if (isdigit(*fen)) {
-      sq += *fen - '0';
+      fl += *fen - '0';
     } else {
       position.board[sq] = piece_of_char(*fen);
-      sq++;
+      fl++;
     }
     fen++;
-    assert(sq <= H1 || *fen == ' ');
   }
 
   position.turn = *++fen == 'b';
@@ -48,9 +54,9 @@ Position position_of_fen(char *fen) {
   if (*++fen == '-') {
     position.en_passant = NO_SQUARE;
   } else {
-    char col = (int)(*fen - 'a');
-    char row = (int)(*++fen - '0');
-    position.en_passant = (Square)(col + 8 * (8-row));
+    File fl = (int)(*fen - 'a');
+    Rank rk = (int)(*++fen - '1');
+    position.en_passant = square_of_rk_fl(rk, fl);
   }
 
   fen++;
@@ -65,25 +71,26 @@ Position position_of_fen(char *fen) {
 char *fen_of_position(Position *position) {
   char fen[100] = "";
   int fen_len = 0;
-  int cum = 0;
-  for (Square sq = A8; sq <= H1; sq++) {
-    if (position->board[sq] == None) {
-      cum++;
-    } else {
-      if (cum > 0) {
-        fen[fen_len++] = '0' + cum;
-        cum = 0;
+  for (int rk = R8; rk >= R1; rk--) {
+    int cum = 0;
+    for (File fl = FA; fl <= FH; fl ++) {
+      Square sq = square_of_rk_fl(rk, fl);
+      if (position->board[sq] == None) {
+        cum++;
+      } else {
+        if (cum > 0) {
+          fen[fen_len++] = '0' + cum;
+          cum = 0;
+        }
+        fen[fen_len++] = char_of_piece(position->board[sq]);
       }
-      fen[fen_len++] = char_of_piece(position->board[sq]);
     }
-    if (sq % 8 == 7) {
-      if (cum > 0) {
-        fen[fen_len++] = '0' + cum;
-        cum = 0;
-      }
-      if (sq != H1) {
-        fen[fen_len++] = '/';
-      }
+    if (cum > 0) {
+      fen[fen_len++] = '0' + cum;
+      cum = 0;
+    }
+    if (rk != R1) {
+      fen[fen_len++] = '/';
     }
   }
 
@@ -102,7 +109,7 @@ char *fen_of_position(Position *position) {
   } else {
     char col = position->en_passant % 8 + 'a';
     fen[fen_len++] = col;
-    char row = position->en_passant / 8 + '0';
+    char row = position->en_passant / 8 + '1';
     fen[fen_len++] = row;
   }
 
@@ -113,4 +120,16 @@ char *fen_of_position(Position *position) {
   char *res = (char *)malloc(sizeof(char) * (strlen(fen) + 1));
   strcpy(res, fen);
   return res;
+}
+
+Square square_of_rk_fl(Rank rk, File fl){
+  return rk * 8 + fl;
+}
+
+Rank rank_of_square(Square sq) {
+  return sq / 8;
+}
+
+File file_of_square(Square sq) {
+  return sq % 8;
 }
