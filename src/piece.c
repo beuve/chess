@@ -18,7 +18,7 @@ Piece piece_of_char(char p) {
   case 'n': return BKnight;
   case 'p': return BPawn;
 
-  default: return NoPiece;
+  default: return NO_PIECE;
   }
 }
 
@@ -37,8 +37,8 @@ PieceKind piece_kind_of_piece(Piece p) {
   return (PieceKind)((p + 1) / 2);
 }
 
-Color color_of_piece(Piece p) { return p % 2; }
+Color color_of_piece(Piece p) { return (Color)((p + 1) % 2); }
 
 Piece piece_of_piece_kind_color(PieceKind pk, Color c) {
-  return 2 * pk + c - 1;
+  return (Piece)(2 * pk + c - 1);
 }

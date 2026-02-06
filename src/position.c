@@ -28,13 +28,13 @@ Piece move_piece(Position *position, Square from, Square to) {
 Piece remove_piece(Position *position, Square from) {
   position->zhash ^= zhash_of_piece_square(position->board[from], from);
   Piece removed_piece = position->board[from];
-  position->board[from] = NoPiece;
+  position->board[from] = NO_PIECE;
   return removed_piece;
 }
 
 Piece put_piece(Position *position, Square to, Piece piece) {
   Piece removed_piece = position->board[to];
-  if (position->board[to] != NoPiece) remove_piece(position, to);
+  if (position->board[to] != NO_PIECE) remove_piece(position, to);
   position->zhash ^= zhash_of_piece_square(piece, to);
   position->board[to] = piece;
   return removed_piece;

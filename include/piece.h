@@ -6,7 +6,7 @@
 #include <wchar.h>
 
 typedef enum PieceKind {
-  NoPieceKind,
+  NO_PIECE_KIND,
   King,
   Queen,
   Rook,
@@ -16,7 +16,7 @@ typedef enum PieceKind {
 } PieceKind;
 
 typedef enum Piece {
-  NoPiece,
+  NO_PIECE,
   WKing,
   BKing,
   WQueen,

@@ -5,7 +5,12 @@
 #include "position.h"
 #include "types.h"
 
-typedef enum MoveKind { Normal, Promotion, EnPassant, Castling } MoveKind;
+typedef enum MoveKind {
+  NormalMove,
+  PromotionMove,
+  EnPassant,
+  CastlingMove
+} MoveKind;
 
 typedef struct Move {
   Square from;

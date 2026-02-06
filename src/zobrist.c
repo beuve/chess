@@ -16,7 +16,7 @@ Zhash zhash_of_position(Position *position) {
   Zhash zhash = 0;
   for (Square sq = A1; sq <= H8; sq++) {
     Piece piece = position->board[sq];
-    if (piece == NoPiece) continue;
+    if (piece == NO_PIECE) continue;
     int z_index = (piece - 1) * sq;
     zhash ^= Z_NUMBERS[z_index];
   }
@@ -28,6 +28,6 @@ Zhash zhash_of_position(Position *position) {
 
 Zhash zhash_of_piece_square(Piece p, Square sq) {
   // 0 ^ x = x, so this return will never change the zhash
-  if (p == NoPiece) return 0;
+  if (p == NO_PIECE) return 0;
   return Z_NUMBERS[(p - 1) * 64 + sq];
 }

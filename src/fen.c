@@ -61,7 +61,7 @@ char *fen_of_position(Position *position) {
     int cum = 0;
     for (File fl = FA; fl <= FH; fl++) {
       Square sq = square_of_rk_fl(rk, fl);
-      if (position->board[sq] == NoPiece) {
+      if (position->board[sq] == NO_PIECE) {
         cum++;
       } else {
         if (cum > 0) {
