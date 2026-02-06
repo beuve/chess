@@ -18,26 +18,27 @@ Piece piece_of_char(char p) {
   case 'n': return BKnight;
   case 'p': return BPawn;
 
-  default: return None;
+  default: return NoPiece;
   }
 }
 
-static const char* pieces_utf8[13] = {
-"·", "♚", "♔", "♛", "♕", "♜", "♖",
-"♝", "♗", "♞", "♘", "♟", "♙"
-};
+static const char *pieces_utf8[13] = {"·", "♚", "♔", "♛", "♕", "♜", "♖",
+                                      "♝", "♗", "♞", "♘", "♟", "♙"};
 
-const char* pretty_char_of_piece_utf8(Piece p) {
-  return pieces_utf8[p];
-};
+const char *pretty_char_of_piece(Piece p) { return pieces_utf8[p]; };
 
 static char pieces_char[13] = {' ', 'K', 'k', 'Q', 'q', 'R', 'r',
                                'B', 'b', 'N', 'n', 'P', 'p'};
 char char_of_piece(Piece p) { return pieces_char[p]; }
 
-
 PieceKind piece_kind_of_piece(Piece p) {
-  // For exemple, WQueen = 3, (3+1) = 4, 4/2 = 2, 2-1 = 1 = Queen.
-  // Similarly, BQueen = 4, (4+1) = 5, 5/2 = 2, 2-1 = 1 = Queen.
-  return (PieceKind)((p + 1) / 2 - 1);
+  // For exemple, WQueen = 3, (3+1) = 4, 4/2 = 2, 2 = 2 = Queen.
+  // Similarly, BQueen = 4, (4+1) = 5, 5/2 = 2, 2 = 2 = Queen.
+  return (PieceKind)((p + 1) / 2);
+}
+
+Color color_of_piece(Piece p) { return p % 2; }
+
+Piece piece_of_piece_kind_color(PieceKind pk, Color c) {
+  return 2 * pk + c - 1;
 }

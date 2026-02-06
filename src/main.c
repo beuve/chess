@@ -1,3 +1,4 @@
+#include "fen.h"
 #include "position.h"
 #include <locale.h>
 #include <stdio.h>
