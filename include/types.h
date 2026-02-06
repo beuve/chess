@@ -28,7 +28,7 @@ typedef enum File { FA, FB, FC, FD, FE, FF, FG, FH } File;
 typedef enum Rank { R1, R2, R3, R4, R5, R6, R7, R8 } Rank;
 
 /**
- * Castling rights bitmask.
+ * Castling rights bitmask (heavily inspired by stockfish).
  *
  * The 4 least-significant bits encode castling availability:
  * - bit 0 (0001): White king-side  (K)

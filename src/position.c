@@ -40,10 +40,9 @@ Piece put_piece(Position *position, Square to, Piece piece) {
   return removed_piece;
 }
 
-Piece promote_piece(Position *position, Square from, Square to,
-                    PieceKind piece_kind) {
+Piece promote_piece(Position *position, Square from, Square to, PieceKind piece_kind) {
   Color piece_color = color_of_piece(position->board[from]);
-  Piece piece = piece_of_piece_kind_color(piece_kind, piece_color);
+  Piece piece = make_piece(piece_kind, piece_color);
 
   Piece removed_piece = remove_piece(position, from);
   assert(piece_kind_of_piece(removed_piece) == Pawn);

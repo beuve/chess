@@ -36,6 +36,6 @@ const char *pretty_char_of_piece(Piece p);
  */
 PieceKind piece_kind_of_piece(Piece p);
 Color color_of_piece(Piece p);
-Piece piece_of_piece_kind_color(PieceKind pk, Color c);
+Piece make_piece(PieceKind pk, Color c);
 
 #endif

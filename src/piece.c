@@ -39,6 +39,4 @@ PieceKind piece_kind_of_piece(Piece p) {
 
 Color color_of_piece(Piece p) { return (Color)((p + 1) % 2); }
 
-Piece piece_of_piece_kind_color(PieceKind pk, Color c) {
-  return (Piece)(2 * pk + c - 1);
-}
+Piece make_piece(PieceKind pk, Color c) { return (Piece)(2 * pk + c - 1); }

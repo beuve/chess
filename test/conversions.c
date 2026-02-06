@@ -6,8 +6,7 @@
 int pieces_conversions() {
   ASSERT_EQ(piece_kind_of_piece(WKing), King, "WKing is not a Queen");
   ASSERT_EQ(color_of_piece(WKing), White, "WKing is not white");
-  ASSERT_EQ(piece_of_piece_kind_color(King, White), WKing,
-            "King + White is not WKing");
+  ASSERT_EQ(make_piece(King, White), WKing, "King + White is not WKing");
   return 0;
 }
 

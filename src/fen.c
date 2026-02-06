@@ -88,6 +88,7 @@ char *fen_of_position(Position *position) {
   if (position->castling & 0b0010) fen[fen_len++] = 'Q';
   if (position->castling & 0b0100) fen[fen_len++] = 'k';
   if (position->castling & 0b1000) fen[fen_len++] = 'q';
+  if (!position->castling) fen[fen_len++] = '-';
 
   fen[fen_len++] = ' ';
   if (position->en_passant == NO_SQUARE) {
@@ -100,8 +101,7 @@ char *fen_of_position(Position *position) {
   }
 
   fen[fen_len] = '\0';
-  sprintf(fen + fen_len, " %d %d", position->num_halfmoves,
-          position->num_moves);
+  sprintf(fen + fen_len, " %d %d", position->num_halfmoves, position->num_moves);
 
   char *res = (char *)malloc(sizeof(char) * (strlen(fen) + 1));
   strcpy(res, fen);
