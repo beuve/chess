@@ -15,21 +15,17 @@ typedef enum PieceKind {
   Pawn
 } PieceKind;
 
+// clang-format off
 typedef enum Piece {
   NO_PIECE,
-  WKing,
-  BKing,
-  WQueen,
-  BQueen,
-  WRook,
-  BRook,
-  WBishop,
-  BBishop,
-  WKnight,
-  BKnight,
-  WPawn,
-  BPawn,
+  WKing,   BKing,
+  WQueen,  BQueen,
+  WRook,   BRook,
+  WBishop, BBishop,
+  WKnight, BKnight,
+  WPawn,   BPawn,
 } Piece;
+// clang-format on
 
 Piece piece_of_char(char p);
 char char_of_piece(Piece p);
