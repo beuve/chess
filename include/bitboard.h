@@ -1,6 +1,7 @@
-#include <stdint.h>
+#ifndef BITBOARD_H
+#define BITBOARD_H
 
-typedef uint64_t BB;
+#include "types.h"
 
 typedef struct Bitboards {
   BB whites;
@@ -12,3 +13,5 @@ typedef struct Bitboards {
   BB queens;
   BB bishops;
 } Bitboards;
+
+#endif

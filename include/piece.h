@@ -1,28 +1,41 @@
+#ifndef PIECE_H
+#define PIECE_H
+
+#include "types.h"
 #include <stdint.h>
 #include <wchar.h>
 
-typedef enum PieceKind { King, Quenn, Rook, Bishop, Knight } PieceKind;
+typedef enum PieceKind {
+  NO_PIECE_KIND,
+  King,
+  Queen,
+  Rook,
+  Bishop,
+  Knight,
+  Pawn
+} PieceKind;
 
+// clang-format off
 typedef enum Piece {
-  None,
-  WKing,
-  BKing,
-  WQueen,
-  BQueen,
-  WRook,
-  BRook,
-  WBishop,
-  BBishop,
-  WKnight,
-  BKnight,
-  WPawn,
-  BPawn,
+  NO_PIECE,
+  WKing,   BKing,
+  WQueen,  BQueen,
+  WRook,   BRook,
+  WBishop, BBishop,
+  WKnight, BKnight,
+  WPawn,   BPawn,
 } Piece;
+// clang-format on
 
 Piece piece_of_char(char p);
 char char_of_piece(Piece p);
-const char* pretty_char_of_piece_utf8(Piece p) ;
+const char *pretty_char_of_piece(Piece p);
+
 /**
- *  Warning: This function assumes that Piece != Empty
+ *  Warning: This function assumes that Piece != NoPiece
  */
 PieceKind piece_kind_of_piece(Piece p);
+Color color_of_piece(Piece p);
+Piece make_piece(PieceKind pk, Color c);
+
+#endif
