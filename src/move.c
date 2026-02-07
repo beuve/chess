@@ -19,8 +19,8 @@ Square en_passant_square_of_move(Move move, Position position) {
   int diff = move.from > move.to ? move.from - move.to : move.to - move.from;
   if (diff != 16) return NO_SQUARE;
   Square to = move.to;
-  if (file_of_square(to) < FH && piece_kind_of_piece(position.board[move.to + 1]) == Pawn) return move.to;
-  if (file_of_square(to) > FA && piece_kind_of_piece(position.board[move.to - 1]) == Pawn) return move.to;
+  if (file_of_square(to) < FH && position.board[move.to + 1] == make_piece(Pawn, !position.turn)) return move.to;
+  if (file_of_square(to) > FA && position.board[move.to - 1] == make_piece(Pawn, !position.turn)) return move.to;
   return NO_SQUARE;
 }
 
