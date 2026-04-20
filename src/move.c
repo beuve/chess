@@ -4,6 +4,7 @@
 #include "position.h"
 #include "types.h"
 #include "zobrist.h"
+#include <assert.h>
 #include <stdlib.h>
 
 bool is_halfmove(Move move, Position position) {
@@ -24,7 +25,13 @@ Square en_passant_square_of_move(Move move, Position position) {
   return NO_SQUARE;
 }
 
-void make_move(Move move, Position *position) {
+ReverseMoveInfos get_reverse_move_infos(Move move, Position *position) {
+  return (ReverseMoveInfos){position->castling, position->board[move.to], position->en_passant,
+                            position->num_halfmoves};
+}
+
+ReverseMoveInfos make_move(Move move, Position *position) {
+  ReverseMoveInfos reverse_move_infos = get_reverse_move_infos(move, position);
   position->zhash ^= color_zhash();
   position->num_moves += position->turn;
   position->num_halfmoves = is_halfmove(move, *position) ? position->num_halfmoves + 1 : 0;
@@ -35,22 +42,22 @@ void make_move(Move move, Position *position) {
   position->zhash ^= zhash_of_castling_rights(position->castling);
 
   PieceKind moved_piece_kind = piece_kind_of_piece(position->board[move.from]);
-  if (moved_piece_kind == King) {
-    if (move.kind == CastlingMove && move.from == move.to + 4) {
+  if (move.kind == CastlingMove) {
+    if (move.from == move.to + 4) {
       move_piece(position, move.from, move.from - 2);
       move_piece(position, move.to, move.from - 1);
-    } else if (move.kind == CastlingMove && move.from == move.to + 4) {
+    } else if (move.from == move.to - 3) {
       move_piece(position, move.from, move.from + 2);
       move_piece(position, move.to, move.from + 1);
     } else {
-      move_piece(position, move.from, move.to);
+      assert(false);
     }
   } else if (move.kind == PromotionMove) {
     promote_piece(position, move.from, move.to, move.promoted);
   } else if (move.kind == EnPassantMove) {
     Square captured_square = position->turn ? move.to + 8 : move.to - 8;
     move_piece(position, move.from, move.to);
-    remove_piece(position, captured_square);
+    reverse_move_infos.captured_piece = remove_piece(position, captured_square);
   } else if (moved_piece_kind == Pawn) {
     position->en_passant = en_passant_square_of_move(move, *position);
     position->zhash ^= zhash_of_en_passant_square(position->en_passant);
@@ -59,4 +66,41 @@ void make_move(Move move, Position *position) {
     move_piece(position, move.from, move.to);
   }
   position->turn = !position->turn;
+
+  return reverse_move_infos;
+}
+
+void undo_move(Move move, Position *position, ReverseMoveInfos reverse_move_infos) {
+  position->zhash ^= color_zhash();
+  position->turn = !position->turn;
+  position->num_moves += position->turn;
+  position->num_halfmoves = reverse_move_infos.num_halfmoves;
+  position->zhash ^= zhash_of_en_passant_square(position->en_passant);
+  position->en_passant = reverse_move_infos.en_passant;
+  position->zhash ^= zhash_of_en_passant_square(position->en_passant);
+  position->zhash ^= zhash_of_castling_rights(position->castling);
+  position->castling = reverse_move_infos.castling;
+  position->zhash ^= zhash_of_castling_rights(position->castling);
+  if (move.kind == CastlingMove) {
+    if (move.from == move.to + 4) {
+      move_piece(position, move.from - 2, move.from);
+      move_piece(position, move.from - 1, move.to);
+    } else if (move.from == move.to - 3) {
+      move_piece(position, move.from + 2, move.from);
+      move_piece(position, move.from + 1, move.to);
+    } else {
+      assert(false);
+    }
+  } else if (move.kind == PromotionMove) {
+    unpromote_piece(position, move.to, move.from);
+    put_piece(position, move.to, reverse_move_infos.captured_piece);
+  } else if (move.kind == EnPassantMove) {
+    Square captured_square = position->turn ? move.to + 8 : move.to - 8;
+    move_piece(position, move.to, move.from);
+
+    put_piece(position, captured_square, reverse_move_infos.captured_piece);
+  } else {
+    move_piece(position, move.to, move.from);
+    put_piece(position, move.to, reverse_move_infos.captured_piece);
+  }
 }

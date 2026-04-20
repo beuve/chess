@@ -2,10 +2,13 @@
 #include "position.h"
 #include "types.h"
 #include <stdlib.h>
+#include "pcg.h"
 
 void init_zobrist_numbers() {
+  pcg_t rng;
+  pcg32_srandom_r(&rng, 0x12345678ULL, 0x9ABCDEFULL);
   for (int i = 0; i < 793; i++) {
-    Z_NUMBERS[i] = rand();
+    Z_NUMBERS[i] = rand_32(&rng);
   }
 }
 

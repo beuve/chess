@@ -49,6 +49,13 @@ Piece promote_piece(Position *position, Square from, Square to, PieceKind piece_
   return put_piece(position, to, piece);
 }
 
+void unpromote_piece(Position *position, Square from, Square to) {
+  Color piece_color = color_of_piece(position->board[from]);
+  Piece piece = make_piece(Pawn, piece_color);
+  remove_piece(position, from);
+  put_piece(position, to, piece);
+}
+
 Square square_of_rk_fl(Rank rk, File fl) { return rk * 8 + fl; }
 
 Rank rank_of_square(Square sq) { return sq / 8; }

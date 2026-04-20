@@ -4,9 +4,9 @@
 #include "move.h"
 #include "position.h"
 
-bool can_castle(Position position, Color turn);
-bool can_castle_king_side(Position position, Color turn);
-bool can_castle_queen_side(Position position, Color turn);
+bool can_castle(Position, Color turn);
+bool can_castle_king_side(Position, Color turn);
+bool can_castle_queen_side(Position, Color turn);
 
 /**
  * Returns a mask to set castling rights after a move.
@@ -16,6 +16,6 @@ bool can_castle_queen_side(Position position, Color turn);
  * For example, if the white king moves, we cancel all
  * castling rights for white, giving the mask 1100.
  */
-CastlingRights castling_update_mask(Position *position, Move move);
+CastlingRights castling_update_mask(Position*, Move);
 
 #endif

@@ -78,7 +78,15 @@ Piece put_piece(Position *position, Square to, Piece piece);
  * are performed. Notably, no checks verify that the piece
  * in [from] is a Pawn.
  */
-Piece promote_piece(Position *position, Square from, Square to,
-                    PieceKind piece_kind);
+Piece promote_piece(Position *position, Square from, Square to, PieceKind piece_kind);
+
+/**
+ * Undo Promotion of a piece by removing piece from [from]
+ * and adding a pawn to [to].
+ * Update the representations: mailbox, bitboards and Zhash.
+ *
+ * There should be no piece in [to].
+ */
+void unpromote_piece(Position *position, Square from, Square to);
 
 #endif

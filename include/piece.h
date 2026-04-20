@@ -5,15 +5,7 @@
 #include <stdint.h>
 #include <wchar.h>
 
-typedef enum PieceKind {
-  NO_PIECE_KIND,
-  King,
-  Queen,
-  Rook,
-  Bishop,
-  Knight,
-  Pawn
-} PieceKind;
+typedef enum PieceKind { NO_PIECE_KIND, King, Queen, Rook, Bishop, Knight, Pawn } PieceKind;
 
 // clang-format off
 typedef enum Piece {

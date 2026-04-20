@@ -2,6 +2,8 @@ project('chess', 'c',
   version : '0.1.0',
   license : 'MIT')
 
+PCG_USE_INLINE_ASM=true
+
 subdir('src')
 subdir('test')
 
