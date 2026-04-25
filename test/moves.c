@@ -11,9 +11,11 @@ int position1() {
 
   Move m1 = {B4, D4, NormalMove, NO_PIECE_KIND};
   ASSERT(is_halfmove(m1, p), "rbd4 should not be a halfmouve");
+  ASSERT(!is_legal(m1, p), "rbd4 should be illegal");
 
   Move m2 = {E4, D4, NormalMove, NO_PIECE_KIND};
   ASSERT(is_halfmove(m2, p), "red4 should be a halfmouve");
+  ASSERT(is_legal(m2, p), "red4 should be legal");
 
   ReverseMoveInfos reverse_move_infos = make_move(m2, &p);
   char *position_fen = fen_of_position(&p);
@@ -33,11 +35,13 @@ int position2() {
   Position p = position_of_fen(starting_fen);
   Zhash starting_zhash = p.zhash;
 
-  Move m1 = {E1, H1, CastlingMove, NO_PIECE_KIND};
+  Move m1 = {E1, G1, CastlingMove, NO_PIECE_KIND};
   ASSERT(is_halfmove(m1, p), "O-O should be a halfmouve");
-
-  Move m2 = {E1, A1, CastlingMove, NO_PIECE_KIND};
+  // Castling here is illegal, but legality of castling is tested in movegen.
+  
+  Move m2 = {E1, C1, CastlingMove, NO_PIECE_KIND};
   ASSERT(is_halfmove(m2, p), "O-O-O should be a halfmouve");
+  ASSERT(is_legal(m1, p), "O-O should be legal");
 
   ReverseMoveInfos reverse_move_infos = make_move(m2, &p);
   char *position_fen = fen_of_position(&p);
@@ -58,9 +62,11 @@ int position3() {
 
   Move m1 = {E5, F6, EnPassantMove, NO_PIECE_KIND};
   ASSERT(!is_halfmove(m1, p), "exf6 should not be a halfmouve");
+  ASSERT(!is_legal(m1, p), "exf6 should be illegal");
 
   Move m2 = {G5, F6, EnPassantMove, NO_PIECE_KIND};
   ASSERT(!is_halfmove(m2, p), "gxf6 should not be a halfmouve");
+  ASSERT(is_legal(m2, p), "gxf6 should be legal");
 
   ReverseMoveInfos reverse_move_infos = make_move(m2, &p);
   char *position_fen = fen_of_position(&p);
@@ -81,9 +87,11 @@ int position4() {
 
   Move m1 = {B7, B8, PromotionMove, Queen};
   ASSERT(!is_halfmove(m1, p), "b8=Q+ should not be a halfmouve");
+  ASSERT(!is_legal(m1, p), "b8=Q+ should be illegal");
 
   Move m2 = {B7, A8, PromotionMove, Knight};
   ASSERT(!is_halfmove(m2, p), "bxf6=N should not be a halfmouve");
+  ASSERT(is_legal(m2, p), "bxf6=N should be legal");
 
   ReverseMoveInfos reverse_move_infos = make_move(m2, &p);
   char *position_fen = fen_of_position(&p);

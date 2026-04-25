@@ -1,4 +1,6 @@
 #include "move.h"
+#include "attacks.h"
+#include "bitboards.h"
 #include "castling.h"
 #include "piece.h"
 #include "position.h"
@@ -19,9 +21,11 @@ bool is_halfmove(Move move, Position position) {
 Square en_passant_square_of_move(Move move, Position position) {
   int diff = move.from > move.to ? move.from - move.to : move.to - move.from;
   if (diff != 16) return NO_SQUARE;
-  Square to = move.to;
-  if (file_of_square(to) < FH && position.board[move.to + 1] == make_piece(Pawn, !position.turn)) return move.to;
-  if (file_of_square(to) > FA && position.board[move.to - 1] == make_piece(Pawn, !position.turn)) return move.to;
+  Direction dir = position.turn == White ? Bottom : Top;
+  if (file_of_square(move.to) < FH && position.board[move.to + 1] == make_piece(Pawn, !position.turn))
+    return move.to + dir;
+  if (file_of_square(move.to) > FA && position.board[move.to - 1] == make_piece(Pawn, !position.turn))
+    return move.to + dir;
   return NO_SQUARE;
 }
 
@@ -43,19 +47,19 @@ ReverseMoveInfos make_move(Move move, Position *position) {
 
   PieceKind moved_piece_kind = piece_kind_of_piece(position->board[move.from]);
   if (move.kind == CastlingMove) {
-    if (move.from == move.to + 4) {
+    if (move.from == move.to + 2) {
       move_piece(position, move.from, move.from - 2);
-      move_piece(position, move.to, move.from - 1);
-    } else if (move.from == move.to - 3) {
+      move_piece(position, move.to - 2, move.from - 1);
+    } else if (move.from == move.to - 2) {
       move_piece(position, move.from, move.from + 2);
-      move_piece(position, move.to, move.from + 1);
+      move_piece(position, move.to + 1, move.from + 1);
     } else {
       assert(false);
     }
   } else if (move.kind == PromotionMove) {
     promote_piece(position, move.from, move.to, move.promoted);
   } else if (move.kind == EnPassantMove) {
-    Square captured_square = position->turn ? move.to + 8 : move.to - 8;
+    Square captured_square = position->turn == White ? move.to - 8 : move.to + 8;
     move_piece(position, move.from, move.to);
     reverse_move_infos.captured_piece = remove_piece(position, captured_square);
   } else if (moved_piece_kind == Pawn) {
@@ -82,12 +86,12 @@ void undo_move(Move move, Position *position, ReverseMoveInfos reverse_move_info
   position->castling = reverse_move_infos.castling;
   position->zhash ^= zhash_of_castling_rights(position->castling);
   if (move.kind == CastlingMove) {
-    if (move.from == move.to + 4) {
+    if (move.from == move.to + 2) {
       move_piece(position, move.from - 2, move.from);
-      move_piece(position, move.from - 1, move.to);
-    } else if (move.from == move.to - 3) {
+      move_piece(position, move.from - 1, move.to - 2);
+    } else if (move.from == move.to - 2) {
       move_piece(position, move.from + 2, move.from);
-      move_piece(position, move.from + 1, move.to);
+      move_piece(position, move.from + 1, move.to + 1);
     } else {
       assert(false);
     }
@@ -95,12 +99,26 @@ void undo_move(Move move, Position *position, ReverseMoveInfos reverse_move_info
     unpromote_piece(position, move.to, move.from);
     put_piece(position, move.to, reverse_move_infos.captured_piece);
   } else if (move.kind == EnPassantMove) {
-    Square captured_square = position->turn ? move.to + 8 : move.to - 8;
+    Square captured_square = position->turn == White ? move.to - 8 : move.to + 8;
     move_piece(position, move.to, move.from);
-
     put_piece(position, captured_square, reverse_move_infos.captured_piece);
   } else {
     move_piece(position, move.to, move.from);
     put_piece(position, move.to, reverse_move_infos.captured_piece);
   }
+}
+
+bool is_legal(Move mv, Position pos) {
+  Square king_sq = pos.kings[pos.turn];
+  if (mv.kind == EnPassantMove) {
+    Square captured_square = pawn_push(mv.to, !pos.turn);
+    BB mask = (bb_all_pieces(pos.bitboards) ^ (1ll << mv.from) ^ (1ll << captured_square)) | (1ll << mv.to);
+    return !is_square_attacked(king_sq, pos.bitboards, !pos.turn, mask, captured_square);
+  }
+  if (mv.kind == CastlingMove) return true; // Already checked in movegen
+  BB mask = (bb_all_pieces(pos.bitboards) ^ (1ll << mv.from)) | 1ll << mv.to;
+  if (mv.from == king_sq) {
+    return !is_square_attacked(mv.to, pos.bitboards, !pos.turn, mask, mv.to);
+  }
+  return !is_square_attacked(king_sq, pos.bitboards, !pos.turn, mask, mv.to);
 }

@@ -1,10 +1,9 @@
-#include "bitboard.h"
 #include "attacks.h"
 #include "test.h"
 #include "types.h"
 #include <stdio.h>
 
-int test_rook_magics() {
+int test_king_movegen() {
     BB blockers, expected, actual;
 
     blockers = 0ULL;
@@ -52,7 +51,7 @@ int test_all_magics_randomly() {
 
 int main() {
     int res = 0;
-    res |= test_rook_magics();
+    res |= test_king_movegen();
     res |= test_bishop_magics();
     res |= test_all_magics_randomly();
     return res;

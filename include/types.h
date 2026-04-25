@@ -102,6 +102,6 @@ typedef enum Directions : int8_t {
   TopLeft = 7,
   Top = 8,
   TopRight = 9,
-} Directions;
+} Direction;
 
 #endif

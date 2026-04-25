@@ -1,6 +1,5 @@
 #include "piece.h"
 #include <stdio.h>
-#include <wchar.h>
 
 Piece piece_of_char(char p) {
   switch (p) {
@@ -21,11 +20,6 @@ Piece piece_of_char(char p) {
   default: return NO_PIECE;
   }
 }
-
-static const char *pieces_utf8[13] = {"·", "♚", "♔", "♛", "♕", "♜", "♖",
-                                      "♝", "♗", "♞", "♘", "♟", "♙"};
-
-const char *pretty_char_of_piece(Piece p) { return pieces_utf8[p]; };
 
 static char pieces_char[13] = {' ', 'K', 'k', 'Q', 'q', 'R', 'r',
                                'B', 'b', 'N', 'n', 'P', 'p'};

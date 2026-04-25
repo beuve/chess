@@ -1,7 +1,7 @@
 #ifndef POSITION_H
 #define POSITION_H
 
-#include "bitboard.h"
+#include "bitboards.h"
 #include "piece.h"
 #include "types.h"
 #include "zobrist.h"
@@ -11,6 +11,9 @@
 typedef struct Position {
   /** Bitboards for each piece type and/or color */
   Bitboards bitboards;
+
+  /** King positions. Used to quickly verify legality */
+  Square kings[2];
 
   /** Mailbox board representation (one piece per square, A1 = 0 .. H8 = 63) */
   Piece board[64];
@@ -36,11 +39,11 @@ typedef struct Position {
   Zhash zhash;
 } Position;
 
-void print_position(Position *position);
-
 Rank rank_of_square(Square sq);
 File file_of_square(Square sq);
 Square square_of_rk_fl(Rank rk, File fl);
+Square pawn_push(Square, Color);
+Square pawn_is_origin_square(Square sq, Color c);
 
 /**
  * Move a piece from square [from] to square [to].

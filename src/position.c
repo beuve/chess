@@ -1,4 +1,5 @@
 #include "position.h"
+#include "bitboards.h"
 #include "piece.h"
 #include "types.h"
 #include "zobrist.h"
@@ -8,27 +9,25 @@
 #include <stdlib.h>
 #include <wchar.h>
 
-void print_position(Position *position) {
-  for (int rk = R8; rk >= R1; rk--) {
-    printf("%d ", rk + 1);
-    for (File fl = FA; fl <= FH; fl++) {
-      Square sq = square_of_rk_fl(rk, fl);
-      printf("%s ", pretty_char_of_piece(position->board[sq]));
-    }
-    printf("\n");
+Square pawn_push(Square sq, Color c) {
+  if (c) {
+    return sq + Bottom;
   }
-  printf("  A B C D E F G H\n");
+  return sq + Top;
 }
 
-Piece move_piece(Position *position, Square from, Square to) {
-  Piece moved_piece = remove_piece(position, from);
-  return put_piece(position, to, moved_piece);
+Square pawn_is_origin_square(Square sq, Color c) {
+  if (c) {
+    return rank_of_square(sq) == R7;
+  }
+  return rank_of_square(sq) == R2;
 }
 
 Piece remove_piece(Position *position, Square from) {
   position->zhash ^= zhash_of_piece_square(position->board[from], from);
   Piece removed_piece = position->board[from];
   position->board[from] = NO_PIECE;
+  bb_switch_piece(&position->bitboards, removed_piece, from);
   return removed_piece;
 }
 
@@ -37,7 +36,18 @@ Piece put_piece(Position *position, Square to, Piece piece) {
   if (position->board[to] != NO_PIECE) remove_piece(position, to);
   position->zhash ^= zhash_of_piece_square(piece, to);
   position->board[to] = piece;
+  bb_switch_piece(&position->bitboards, piece, to);
   return removed_piece;
+}
+
+Piece move_piece(Position *position, Square from, Square to) {
+  Piece moved_piece = remove_piece(position, from);
+  PieceKind moved_piece_kind = piece_kind_of_piece(moved_piece);
+  if (moved_piece_kind == King) {
+    Color moved_piece_color = color_of_piece(moved_piece);
+    position->kings[moved_piece_color] = to;
+  }
+  return put_piece(position, to, moved_piece);
 }
 
 Piece promote_piece(Position *position, Square from, Square to, PieceKind piece_kind) {

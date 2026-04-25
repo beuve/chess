@@ -25,11 +25,11 @@ int position1() {
 
 int position2() {
   Position p = position_of_fen(
-      "r1bq3r/ppp2kpp/2n2n2/2bpP3/8/2p2N2/PP3PPP/RNBQK1R1 w Q d6 0 9");
+      "r1bq3r/ppp2kpp/n4n2/2bpP3/Q4B2/2p2N2/PP1N1PPP/R3K1R1 w Q d6 0 12");
 
   ASSERT_EQ(p.turn, White, "It should be black's turn");
   ASSERT_EQ(p.num_halfmoves, 0, "Half Moves should be 0");
-  ASSERT_EQ(p.num_moves, 9, "Half Moves should be 18");
+  ASSERT_EQ(p.num_moves, 12, "Half Moves should be 18");
   ASSERT_EQ(p.en_passant, D6,
             "White should be able to capture in D6 en passant");
 

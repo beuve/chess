@@ -1,7 +1,15 @@
 #include "fen.h"
+#include "piece.h"
 #include "types.h"
 #include <assert.h>
 #include <stdlib.h>
+
+void get_kings_position(Piece board[64], Square* kings) {
+  for (Square sq = A1; sq <= H8; sq++) {
+    if (board[sq] == WKing) kings[0] = sq;
+    if (board[sq] == BKing) kings[1] = sq;
+  }
+}
 
 Position position_of_fen(char *fen) {
   Position position = {0};
@@ -20,6 +28,9 @@ Position position_of_fen(char *fen) {
     }
     fen++;
   }
+
+  init_botboards_from_mailbox(position.board, &position.bitboards);
+  get_kings_position(position.board, position.kings);
 
   position.turn = *++fen == 'b';
 

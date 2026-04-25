@@ -29,7 +29,7 @@ typedef struct Move {
 } Move;
 
 bool is_halfmove(Move, Position);
-// bool is_legal(Move move, Position pos);
+bool is_legal(Move, Position);
 ReverseMoveInfos make_move(Move, Position*);
 Square en_passant_square(Move, Position);
 void undo_move(Move, Position*, ReverseMoveInfos);

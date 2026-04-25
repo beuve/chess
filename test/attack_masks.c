@@ -1,4 +1,4 @@
-#include "bitboard.h"
+#include "attacks.h"
 #include "test.h"
 #include "types.h"
 #include <stdio.h>

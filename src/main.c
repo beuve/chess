@@ -1,13 +1,20 @@
+#include "castling.h"
 #include "fen.h"
+#include "movegen.h"
+#include "pretty_print.h"
+#include "perft.h"
 #include "position.h"
-#include <locale.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <wchar.h>
 
 int main() {
-  setlocale(LC_ALL, "");
-  Position p = position_of_fen("rnb1kbnr/ppp1qppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2");
+  char *starting_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  Position p = position_of_fen(starting_fen);
   print_position(&p);
-  printf("%s\n", fen_of_position(&p));
+  print_bitboard(p.bitboards.kings);
+  uint64_t perft_result = perft(&p, 7, true);
+  fprintf(stderr, "perft = %lld\n", perft_result);
   return 0;
 }

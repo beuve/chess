@@ -1,8 +1,9 @@
 #include "magic.h"
-#include "bitboard.h"
+#include "attacks.h"
 #include "piece.h"
 #include "types.h"
 #include <stdlib.h>
+#include "pcg.h"
 
 int popcount(BB x) {
   x = x - ((x >> 1) & 0x5555555555555555ULL);
@@ -44,8 +45,8 @@ Magic get_square_magic(Square sq, PieceKind pk, pcg_t *rng) {
 
   while (failed) {
     magic = rand_64(rng) & rand_64(rng) & rand_64(rng);
-    failed = false;
     if (popcount((magic * mask) >> 56) > 6) continue;
+    failed = false;
     
     epoch++;
     for (int i = 0; i < size; i++) {

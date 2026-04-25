@@ -1,1 +1,14 @@
-sources = files('bitboard.c', 'piece.c', 'position.c', 'zobrist.c', 'move.c', 'fen.c', 'castling.c', 'pcg.c', 'magic.c', 'attacks.c')
+sources = files('bitboards.c', 
+               'piece.c', 
+               'position.c', 
+               'zobrist.c', 
+               'move.c', 
+               'fen.c', 
+               'castling.c', 
+               'pcg.c', 
+               'magic.c', 
+               'attacks.c',
+               'movegen.c',
+               'move_list.c',
+               'perft.c',
+               'pretty_print.c')
