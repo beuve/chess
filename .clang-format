@@ -1,2 +1,3 @@
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortIfStatementsOnASingleLine: Always
+ColumnLimit: 120
